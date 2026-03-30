@@ -247,6 +247,11 @@ export class Page implements IPage {
       format: options.format,
       quality: options.quality,
       fullPage: options.fullPage,
+      clipX: options.clip?.x,
+      clipY: options.clip?.y,
+      clipWidth: options.clip?.width,
+      clipHeight: options.clip?.height,
+      clipScale: options.clip ? 1 : undefined,
     }) as string;
 
     if (options.path) {

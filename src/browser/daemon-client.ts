@@ -29,6 +29,11 @@ export interface DaemonCommand {
   format?: 'png' | 'jpeg';
   quality?: number;
   fullPage?: boolean;
+  clipX?: number;
+  clipY?: number;
+  clipWidth?: number;
+  clipHeight?: number;
+  clipScale?: number;
 }
 
 export interface DaemonResult {

@@ -35,6 +35,7 @@ export interface ScreenshotOptions {
   quality?: number;
   fullPage?: boolean;
   path?: string;
+  clip?: { x: number; y: number; width: number; height: number };
 }
 
 export interface BrowserSessionInfo {

@@ -223,6 +223,61 @@ opencli barchart options --symbol AAPL   # 期权链
 opencli barchart greeks --symbol AAPL    # 期权 Greeks
 opencli barchart flow --limit 20         # 异常期权活动
 
+# TradingView (browser) — 核心市场/图表命令
+# 说明：
+# - TradingView 命令参数较多，建议始终带 --format json 或 --format md 便于 LLM 消费。
+# - symbol 推荐使用 EXCHANGE:TICKER 形式（如 BINANCE:BTCUSDT / NASDAQ:NDX）。
+
+# 1) Watchlist（首页观察列表）
+opencli tradingview watchlist --limit 20
+
+# 2) Screener（统一入口）
+# --type 枚举：stocks | etfs | bonds | crypto-coins | cex-pairs
+opencli tradingview screener --type stocks --limit 20
+opencli tradingview screener --type crypto-coins --limit 50 --sort-by crypto_total_rank --sort-order asc
+opencli tradingview screener --type bonds --limit 20
+
+# 3) Symbol（标的详情/分区）
+# --section 支持逗号：overview,news,community,technicals,seasonals,markets,etfs,all
+opencli tradingview symbol BINANCE:BTCUSDT --section overview,technicals,news --format json
+opencli tradingview symbol NASDAQ:NDX --section markets --markets-limit 50 --format json
+opencli tradingview symbol CRYPTO:BTCUSD --section community --community-limit 20 --format json
+
+# 4) Market（Markets 菜单 + 二级菜单）
+# action=menu|browse|countries
+# --section 枚举：
+#   entire-world,countries,news,indices,stocks,crypto,futures,forex,government-bonds,corporate-bonds,etfs,economy
+# --group 支持多选（逗号分隔），如 gainers,losers,active,ideas,news,market-cap,dominance,...
+# --country 当前内置：us|cn|jp|hk|uk|de|fr|in
+opencli tradingview market --list --format json
+opencli tradingview market menu --section crypto --open --limit 20 --format json
+opencli tradingview market browse --section stocks --group gainers,losers,active,ideas,news --format json
+opencli tradingview market browse --section crypto --group gainers,losers,market-cap,dominance --format json
+opencli tradingview market countries --country us --format json
+
+# 5) Chart（核心图表操作）
+# action 目前为 open
+# 关键参数：
+# --symbol EXCHANGE:TICKER（必填）
+# --layout <id>（可选，指定 layoutId）
+# --timeframe: 1m,5m,15m,1h,4h,1d,1w,1mo（也可传 TradingView interval 值，如 240/D/W/M）
+# --indicator: 支持逗号多选；可用别名如 rsi,macd,ema,sma,vwap,bollinger,ichimoku,stoch
+# --no-prenav: 跳过预导航首页
+# --fullscreen: 截图前尝试切换 FullScreen 模式
+# --screenshot: 保存截图；默认 chart-only 裁剪（优先 chart-container）
+# --output: 输出路径（默认 /tmp/tradingview-chart-<ts>.png）
+# --chart-only: 默认 true，仅截 chart 区域
+# --full-page: 整页截图（会覆盖 chart-only）
+# --wait-ready + --ready-timeout: 截图前等待图表就绪
+opencli tradingview chart open --symbol BINANCE:BTCUSDT --timeframe 4h
+opencli tradingview chart open --symbol BINANCE:BTCUSDT --timeframe 1h --indicator rsi,macd --wait --wait-seconds 5
+opencli tradingview chart open --symbol BINANCE:BTCUSDT --timeframe 1h --fullscreen --screenshot --wait-ready --output /tmp/tv-btcusdt-1h.png --no-prenav --format json
+
+# 6) TradingView + Markdown 输出（推荐给 LLM）
+opencli tradingview symbol NASDAQ:NDX --section overview,news --format md
+opencli tradingview market browse --section crypto --group gainers,losers,market-cap --format md
+opencli tradingview screener --type crypto-coins --limit 20 --format md
+
 # Jike 即刻 (browser)
 opencli jike feed --limit 10             # 动态流
 opencli jike search "AI"                 # 搜索 (query positional)
@@ -427,6 +482,12 @@ opencli web read --url "https://..."     # 抓取任意网页并导出为 Markdo
 
 # 微信公众号 Weixin (browser)
 opencli weixin download --url "https://mp.weixin.qq.com/s/xxx"  # 下载公众号文章为 Markdown
+
+# Markdown 导出（新增建议用法）
+# 绝大多数内置命令都支持 -f md / --format md，可直接喂给 LLM 上下文。
+opencli web read --url "https://example.com" --format md
+opencli weixin download --url "https://mp.weixin.qq.com/s/xxx" --format md
+opencli tradingview symbol BINANCE:BTCUSDT --section all --format md
 
 # 小宇宙 Xiaoyuzhou (public)
 opencli xiaoyuzhou podcast 12345          # 播客资料 (id positional)

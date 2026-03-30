@@ -103,7 +103,12 @@ export const evaluateAsync = evaluate;
  */
 export async function screenshot(
   tabId: number,
-  options: { format?: 'png' | 'jpeg'; quality?: number; fullPage?: boolean } = {},
+  options: {
+    format?: 'png' | 'jpeg';
+    quality?: number;
+    fullPage?: boolean;
+    clip?: { x: number; y: number; width: number; height: number; scale?: number };
+  } = {},
 ): Promise<string> {
   await ensureAttached(tabId);
 
@@ -132,6 +137,15 @@ export async function screenshot(
     const params: Record<string, unknown> = { format };
     if (format === 'jpeg' && options.quality !== undefined) {
       params.quality = Math.max(0, Math.min(100, options.quality));
+    }
+    if (options.clip) {
+      params.clip = {
+        x: options.clip.x,
+        y: options.clip.y,
+        width: options.clip.width,
+        height: options.clip.height,
+        scale: options.clip.scale ?? 1,
+      };
     }
 
     const result = await chrome.debugger.sendCommand({ tabId }, 'Page.captureScreenshot', params) as {

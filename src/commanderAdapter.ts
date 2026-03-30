@@ -61,7 +61,16 @@ export function registerCommandToProgram(siteCmd: Command, cmd: CliCommand): voi
     for (const arg of cmd.args) {
       if (arg.positional) continue;
       const camelName = arg.name.replace(/-([a-z])/g, (_m, ch: string) => ch.toUpperCase());
-      const v = optionsRecord[arg.name] ?? optionsRecord[camelName];
+      let v = optionsRecord[arg.name] ?? optionsRecord[camelName];
+      // Commander negated option quirk:
+      // For flags like "--no-prenav", commander stores { prenav: false }.
+      // Our arg name can still be "no-prenav", so derive it from the positive key.
+      if (v === undefined && arg.name.startsWith('no-')) {
+        const positiveName = arg.name.slice(3);
+        const positiveCamel = positiveName.replace(/-([a-z])/g, (_m, ch: string) => ch.toUpperCase());
+        const pv = optionsRecord[positiveName] ?? optionsRecord[positiveCamel];
+        if (typeof pv === 'boolean') v = !pv;
+      }
       if (v !== undefined) kwargs[arg.name] = v;
     }
 

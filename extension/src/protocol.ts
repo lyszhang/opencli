@@ -32,6 +32,12 @@ export interface Command {
   quality?: number;
   /** Whether to capture full page (not just viewport) */
   fullPage?: boolean;
+  /** Optional clip rectangle in CSS pixels for chart-only screenshots */
+  clipX?: number;
+  clipY?: number;
+  clipWidth?: number;
+  clipHeight?: number;
+  clipScale?: number;
 }
 
 export interface Result {

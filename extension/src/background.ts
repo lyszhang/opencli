@@ -540,6 +540,15 @@ async function handleScreenshot(cmd: Command, workspace: string): Promise<Result
       format: cmd.format,
       quality: cmd.quality,
       fullPage: cmd.fullPage,
+      clip: (typeof cmd.clipX === 'number' && typeof cmd.clipY === 'number' && typeof cmd.clipWidth === 'number' && typeof cmd.clipHeight === 'number')
+        ? {
+          x: cmd.clipX,
+          y: cmd.clipY,
+          width: cmd.clipWidth,
+          height: cmd.clipHeight,
+          scale: typeof cmd.clipScale === 'number' ? cmd.clipScale : 1,
+        }
+        : undefined,
     });
     return { id: cmd.id, ok: true, data };
   } catch (err) {

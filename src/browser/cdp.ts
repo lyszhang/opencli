@@ -269,11 +269,21 @@ class CDPPage implements IPage {
   }
 
   async screenshot(options: ScreenshotOptions = {}): Promise<string> {
-    const result = await this.bridge.send('Page.captureScreenshot', {
+    const params: Record<string, unknown> = {
       format: options.format ?? 'png',
       quality: options.format === 'jpeg' ? (options.quality ?? 80) : undefined,
       captureBeyondViewport: options.fullPage ?? false,
-    });
+    };
+    if (options.clip) {
+      params.clip = {
+        x: options.clip.x,
+        y: options.clip.y,
+        width: options.clip.width,
+        height: options.clip.height,
+        scale: 1,
+      };
+    }
+    const result = await this.bridge.send('Page.captureScreenshot', params);
     const base64 = isRecord(result) && typeof result.data === 'string' ? result.data : '';
     if (options.path) {
       await saveBase64ToFile(base64, options.path);
