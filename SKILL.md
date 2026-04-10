@@ -278,6 +278,75 @@ opencli tradingview symbol NASDAQ:NDX --section overview,news --format md
 opencli tradingview market browse --section crypto --group gainers,losers,market-cap --format md
 opencli tradingview screener --type crypto-coins --limit 20 --format md
 
+# Nansen (browser — 复用 Chrome 登录态)
+# 说明：
+# - 需要 Chrome 已登录 `app.nansen.ai`（否则可能返回未授权/空数据）
+# - 建议加 `-f json` 便于 Agent/RAG 消费
+opencli nansen smart-money --chain solana --days 30 --limit 20 --sort-by realizedPnlUsd --sort-order desc
+opencli nansen tokens --chain solana --timeframe 24h --limit 20 --sort-by netflow --sort-order desc
+opencli nansen profitable --chain solana --timeframe 7d --limit 20
+opencli nansen wallet-performance <walletAddress> --chain solana --min-usd 1000 --limit 20
+
+# CoinGlass (browser — 复用 Chrome 登录态/会在页面中解析表格)
+# 说明：
+# - 需要 Chrome 已登录 `www.coinglass.com`（用于抓取页面渲染后的表格数据）
+# - coin / coin-oi 是按 symbol（BTC/ETH/SOL 等）抓取单币详情
+opencli coinglass markets --limit 20
+opencli coinglass funding-rates --limit 20
+opencli coinglass exchanges --limit 20
+opencli coinglass liquidations --limit 20 --period 24h
+opencli coinglass etf --limit 20
+opencli coinglass gainers-losers --type all --limit 20
+opencli coinglass coin BTC --limit 10
+opencli coinglass coin-oi BTC --limit 10
+
+# DexScreener (public API)
+# 说明：
+# - 不需要浏览器登录；网络请求基于公开 API
+# - chain 传 chain id（如 ethereum/bsc/solana/base），地址参数是 0x... 合约地址
+opencli dexscreener search "BTC" --limit 20
+opencli dexscreener tokens ethereum <tokenAddress1>,<tokenAddress2> --limit 50
+opencli dexscreener pair ethereum <pairAddress> --limit 20
+opencli dexscreener token-pairs ethereum <tokenAddress> --limit 50
+
+# DefiLlama (public API — 免费，无需 API Key)
+# 说明：
+# - 免费公开接口，通常不需要 API Key；必要时可重试（限流/网络抖动）
+# - protocol 参数用协议 slug/id（如 aave/uniswap），chain / chain-tvl 的链用链名 slug
+opencli defillama protocols --limit 20
+opencli defillama protocol aave --top-chains 5 --top-tokens 5
+opencli defillama chains --limit 20
+opencli defillama chain-tvl ethereum --limit 30
+opencli defillama dexs --limit 20
+opencli defillama dexs-chain ethereum --limit 20
+opencli defillama fees --limit 20
+opencli defillama fees-chain ethereum --limit 20
+opencli defillama open-interest --limit 20
+opencli defillama options --limit 20
+opencli defillama options-chain ethereum --limit 20
+
+# Farside Investors（公开 ETF flows，无需登录）
+# 说明：
+# - 会抓取 `https://farside.co.uk/btc|eth|sol/` 页面上的“ETF Flow (US$m)”表格
+# - 默认仅返回每一天的 TOTAL 汇总；加 `--with-issuers` 才会返回各发行方明细
+opencli farside btc --limit 0
+opencli farside eth --limit 0
+opencli farside sol --limit 0
+opencli farside eth --limit 5 --with-issuers
+opencli farside sol --with-summary
+
+# RootData（公开 Web3 项目聚合页，无需登录；需浏览器抓取）
+# 说明：
+# - `hot`：抓取首页“Top 100 Hot Crypto Projects”列表的当前分页表格（不保证全量）
+# - `projects/investors/token-unlocks/news`：对应导航页的列表数据，支持 `--limit`（最佳努力，最多建议 200～300）
+# - `detail`：只传项目名（内部会用站内搜索解析到详情页 URL；也兼容直接传 URL）
+opencli rootdata hot --limit 20
+opencli rootdata projects --limit 200
+opencli rootdata investors --limit 200
+opencli rootdata token-unlocks --limit 200
+opencli rootdata news --limit 200
+opencli rootdata detail "StakeStone"
+
 # Jike 即刻 (browser)
 opencli jike feed --limit 10             # 动态流
 opencli jike search "AI"                 # 搜索 (query positional)
@@ -497,6 +566,35 @@ opencli xiaoyuzhou episode 12345          # 单集详情 (id positional)
 # Wikipedia (public)
 opencli wikipedia search "AI"             # 搜索 (query positional)
 opencli wikipedia summary "Python"        # 摘要 (title positional)
+```
+
+### RWA.xyz（app.rwa.xyz）操作指南
+
+> 说明：
+> - `rwa` 命令使用 `https://app.rwa.xyz` 页面内的公开 `__NEXT_DATA__` 数据，不依赖付费 API。
+> - 默认是表格输出；建议加 `-f json` 获取完整结构化字段（更适合 Agent/RAG）。
+> - `--limit` 不传时返回页面全部，传入时按指定条数截断, 默认不传递--limit参数。
+
+```bash
+# 1) 资产类别（对应 app.rwa.xyz 左侧 Asset Classes）
+# 支持：treasuries|stablecoins|government-bonds|credit|stocks|
+#      private-equity-venture-capital|active-strategies|commodities|real-estate
+opencli rwa category stablecoins --limit 5
+opencli rwa category stablecoins --limit 5 -f json
+opencli rwa category treasuries -f json
+
+# 2) 单资产详情（对应 /assets/<ticker>）
+# 表格：返回 token 部署列表
+# JSON：每个 token 额外带 asset 概要（marketCap/price/holders/监管/托管/透明度 等）
+opencli rwa asset USDT --limitTokens 3
+opencli rwa asset USDT --limitTokens 3 -f json
+
+# 3) 总览、筛选、参与者
+opencli rwa news --limit 10 -f json
+opencli rwa asset-screener --limit 20 -f json
+opencli rwa networks --limit 20 -f json
+opencli rwa platforms --limit 20 -f json
+opencli rwa asset-managers --limit 20 -f json
 ```
 
 ### Desktop Adapter Commands

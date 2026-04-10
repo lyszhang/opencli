@@ -42,6 +42,7 @@ Run `opencli list` for the live registry.
 | **[jd](/adapters/browser/jd)** | `item` | 🔐 Browser |
 | **[web](/adapters/browser/web)** | `read` | 🔐 Browser |
 | **[weixin](/adapters/browser/weixin)** | `download` | 🔐 Browser |
+| **[rootdata](/adapters/browser/rootdata)** | `hot` `detail` | 🌐 Browser |
 
 ## Public API Adapters
 
@@ -49,6 +50,8 @@ Run `opencli list` for the live registry.
 |------|----------|------|
 | **[hackernews](/adapters/browser/hackernews)** | `top` `new` `best` `ask` `show` `jobs` `search` `user` | 🌐 Public |
 | **[bbc](/adapters/browser/bbc)** | `news` | 🌐 Public |
+| **[defillama](/adapters/browser/defillama)** | `protocols` `protocol` `chains` `chain-tvl` `dexes` `dexes-chain` `fees` `fees-chain` `options` `options-chain` `open-interest` | 🌐 Public |
+| **[farside](/adapters/browser/farside)** | `btc` `eth` `sol` | 🌐 Public |
 | **[devto](/adapters/browser/devto)** | `top` `tag` `user` | 🌐 Public |
 | **[dictionary](/adapters/browser/dictionary)** | `search` `synonyms` `examples` | 🌐 Public |
 | **[apple-podcasts](/adapters/browser/apple-podcasts)** | `search` `episodes` `top` | 🌐 Public |

@@ -148,6 +148,7 @@ Run `opencli list` for the live registry.
 | **arxiv** | `search` `paper` | Public |
 | **wikipedia** | `search` `summary` `random` `trending` | Public |
 | **hackernews** | `top` `new` `best` `ask` `show` `jobs` `search` `user` | Public |
+| **defillama** | `protocols` `protocol` `chains` `chain-tvl` `dexes` `dexes-chain` `fees` `fees-chain` `options` `options-chain` `open-interest` | Public |
 | **jd** | `item` | Browser |
 | **linkedin** | `search` `timeline` | Browser |
 | **reuters** | `search` | Browser |

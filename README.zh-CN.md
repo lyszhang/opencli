@@ -150,6 +150,7 @@ npm install -g @jackwener/opencli@latest
 | **arxiv** | `search` `paper` | 公开 |
 | **wikipedia** | `search` `summary` `random` `trending` | 公开 |
 | **hackernews** | `top` `new` `best` `ask` `show` `jobs` `search` `user` | 公共 API |
+| **defillama** | `protocols` `protocol` `chains` `chain-tvl` `dexes` `dexes-chain` `fees` `fees-chain` `options` `options-chain` `open-interest` | 公共 API |
 | **jd** | `item` | 浏览器 |
 | **linkedin** | `search` `timeline` | 浏览器 |
 | **reuters** | `search` | 浏览器 |
