@@ -1,5 +1,5 @@
 {
-  "name": "@jackwener/opencli",
+  "name": "@lyszhang/opencli",
   "version": "1.4.1",
   "publishConfig": {
     "access": "public"
